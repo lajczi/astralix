@@ -17,7 +17,7 @@ import { config } from '../utils/config.js';
 
 const command: Command = {
   name: 'ticket-setup',
-  description: 'Ustawia system zgłoszeń w kanale',
+  description: 'Wysyła embed z panelem do zgłoszeń',
   enabled: true,
   defaultMemberPermissions: PermissionFlagsBits.Administrator,
   execute: async (interaction: ChatInputCommandInteraction) => {
@@ -80,7 +80,7 @@ const command: Command = {
     await ticketChannel.send({ embeds: [embed], components: [buttons] });
 
     await interaction.reply({
-      content: 'Embed z panelem do ticketów został wysłany na kanał.',
+      content: 'Embed z panelem do zgłoszeń został wysłany na kanał.',
       flags: MessageFlags.Ephemeral,
     });
   },
