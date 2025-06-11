@@ -6,13 +6,6 @@ roleId = "1370077440445120602"
 [suggestions]
 channelId = "1381317886492016791"
 
-[autochannel]
-triggerChannelId = "1373697602704642110"
-categoryId = "1373633525760393247"
-
-[welcome]
-channelId = "1370067037124038686"
-
 [tickets]
 channelId = "1381658610555293748"
 categoryId = "1381658519094431906"

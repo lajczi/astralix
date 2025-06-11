@@ -10,11 +10,6 @@ export const config = parse(readFileSync('config.toml', 'utf-8')) as {
   guildId: string;
   autorole: { roleId: string };
   suggestions: { channelId: string };
-  autochannel: {
-    triggerChannelId: string;
-    categoryId: string;
-  };
-  welcome: { channelId: string };
   tickets: {
     channelId: string;
     categoryId: string;

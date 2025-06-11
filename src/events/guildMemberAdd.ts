@@ -18,15 +18,6 @@ const event: Event = {
     if (role) {
       await member.roles.add(role).catch(() => {});
     }
-
-    // handle welcome message
-    const channel = member.guild.channels.cache.get(config.welcome.channelId);
-    if (channel?.isTextBased() && 'send' in channel) {
-      const msg = await channel.send(`${member}`).catch(() => {});
-      if (msg) {
-        await msg.delete().catch(() => {});
-      }
-    }
   },
 };
 
