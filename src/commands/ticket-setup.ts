@@ -12,8 +12,8 @@ import {
   MessageFlags,
   PermissionFlagsBits,
 } from 'discord.js';
-import type { Command } from '../types/Command.js';
 import { config } from '../config.js';
+import type { Command } from '../types/Command.js';
 
 const command: Command = {
   name: 'ticket-setup',

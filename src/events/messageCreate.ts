@@ -4,8 +4,8 @@
  */
 
 import { EmbedBuilder, type Message, PermissionsBitField } from 'discord.js';
-import type { Event } from '../types/Event.js';
 import { config } from '../config.js';
+import type { Event } from '../types/Event.js';
 
 const event: Event = {
   name: 'messageCreate',

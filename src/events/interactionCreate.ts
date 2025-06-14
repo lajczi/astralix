@@ -24,8 +24,8 @@ import {
   TextInputStyle,
   type User,
 } from 'discord.js';
-import type { Event } from '../types/Event.js';
 import { config } from '../config.js';
+import type { Event } from '../types/Event.js';
 
 const TICKET_TYPES = {
   create_ticket_cooperation: { emoji: '🤝', name: 'Współpraca' },
