@@ -7,7 +7,7 @@
         "useIgnoreFile": true
     },
     "files": {
-        "ignore": ["package.json", "node_modules", "dist"]
+        "ignore": ["node_modules", "dist"]
     },
     "formatter": {
         "indentStyle": "space",

@@ -21,8 +21,8 @@ export async function interactionCreate(client: Bot, interaction: Interaction) {
             }
             try {
                 await command?.run(client, interaction);
-            } catch (e) {
-                logger.error(`Command error: ${e}`);
+            } catch (err) {
+                logger.error(`Command error: ${err}`);
                 if (interaction.deferred || interaction.replied) {
                     await interaction
                         .followUp({ content: 'An error occurred.', flags: MessageFlags.Ephemeral })
@@ -39,8 +39,8 @@ export async function interactionCreate(client: Bot, interaction: Interaction) {
             const component = client.components.get(id);
             try {
                 await component?.run(client, interaction);
-            } catch (e) {
-                logger.error(`Component error: ${e}`);
+            } catch (err) {
+                logger.error(`Component error: ${err}`);
                 if (interaction.deferred || interaction.replied) {
                     await interaction
                         .followUp({ content: 'An error occurred.', flags: MessageFlags.Ephemeral })
@@ -57,8 +57,8 @@ export async function interactionCreate(client: Bot, interaction: Interaction) {
             const modal = client.modals.get(modalId);
             try {
                 await modal?.run(client, interaction);
-            } catch (e) {
-                logger.error(`Modal error: ${e}`);
+            } catch (err) {
+                logger.error(`Modal error: ${err}`);
                 if (interaction.deferred || interaction.replied) {
                     await interaction
                         .followUp({ content: 'An error occurred.', flags: MessageFlags.Ephemeral })
@@ -82,8 +82,8 @@ export async function interactionCreate(client: Bot, interaction: Interaction) {
             }
             try {
                 await autocomplete?.(client, interaction);
-            } catch (e) {
-                logger.error(`Autocomplete error: ${e}`);
+            } catch (err) {
+                logger.error(`Autocomplete error: ${err}`);
             }
             break;
     }

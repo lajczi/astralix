@@ -19,6 +19,7 @@ import {
     type User,
 } from 'discord.js';
 import { config } from '../config.js';
+import { logger } from './logger.js';
 
 export async function hasActiveTicket(guild: Guild, user: User): Promise<boolean> {
     const category = guild.channels.cache.get(config.tickets.categoryId) as CategoryChannel | undefined;
@@ -46,10 +47,7 @@ export async function createTicket(
     const adminRole = guild.roles.cache.get(config.tickets.adminRoleId);
 
     if (!category || !adminRole) {
-        console.error('Category or admin role not found:', {
-            categoryId: config.tickets.categoryId,
-            adminRoleId: config.tickets.adminRoleId,
-        });
+        logger.error('Category or admin role not found');
         return null;
     }
 
@@ -59,8 +57,8 @@ export async function createTicket(
         const ticketChannel = await createTicketChannel(guild, user, category, adminRole);
         await sendTicketEmbed(ticketChannel, user, typeName, description, adminRole);
         return ticketChannel;
-    } catch (error) {
-        console.error('Error creating ticket:', error);
+    } catch (err) {
+        logger.error(`Error creating ticket: ${err}`);
         return null;
     }
 }
