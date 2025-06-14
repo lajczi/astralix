@@ -44,8 +44,15 @@ const command: Command = {
     },
   ],
   enabled: true,
-  defaultMemberPermissions: PermissionFlagsBits.ManageRoles,
   execute: async (interaction: ChatInputCommandInteraction) => {
+    if (!interaction.memberPermissions?.has(PermissionFlagsBits.ManageRoles)) {
+      await interaction.reply({
+        content: 'Nie masz uprawnień do używania tej komendy (wymagane: Zarządzanie rolami).',
+        flags: MessageFlags.Ephemeral,
+      });
+      return;
+    }
+
     const subcommand = interaction.options.getSubcommand();
     const roleOption = interaction.options.getRole('role', true);
     const { guild, user: admin } = interaction;

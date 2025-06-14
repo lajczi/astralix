@@ -30,8 +30,15 @@ const command: Command = {
     },
   ],
   enabled: true,
-  defaultMemberPermissions: PermissionFlagsBits.BanMembers,
   execute: async (interaction: ChatInputCommandInteraction) => {
+    if (!interaction.memberPermissions?.has(PermissionFlagsBits.BanMembers)) {
+      await interaction.reply({
+        content: 'Nie masz uprawnień do używania tej komendy (wymagane: Banowanie członków).',
+        flags: MessageFlags.Ephemeral,
+      });
+      return;
+    }
+
     const targetUser = interaction.options.getUser('user', true);
     const reason = interaction.options.getString('reason') ?? 'Nie podano powodu';
     const { guild, user: admin } = interaction;

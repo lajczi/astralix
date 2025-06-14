@@ -26,8 +26,16 @@ const command: Command = {
     },
   ],
   enabled: true,
-  defaultMemberPermissions: PermissionFlagsBits.ManageMessages,
   execute: async (interaction: ChatInputCommandInteraction) => {
+    if (!interaction.memberPermissions?.has(PermissionFlagsBits.ManageMessages)) {
+      await interaction.reply({
+        content:
+          'Nie masz uprawnień do używania tej komendy (wymagane: Zarządzanie wiadomościami).',
+        flags: MessageFlags.Ephemeral,
+      });
+      return;
+    }
+
     const amount = interaction.options.getInteger('amount', true);
     const { channel, user: admin } = interaction;
 

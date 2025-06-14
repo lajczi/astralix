@@ -26,7 +26,7 @@ const command: Command = {
       .setColor(0x00ff88)
       .setTimestamp()
       .setFooter({
-        text: `Dla ${interaction.user.tag} • API: ivall.pl/memy`,
+        text: `Dla ${interaction.user.tag}`,
         iconURL: interaction.user.displayAvatarURL(),
       });
 
