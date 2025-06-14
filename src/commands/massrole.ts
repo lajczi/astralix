@@ -12,7 +12,7 @@ import {
 } from 'discord.js';
 import type { Bot } from '../classes/Bot.js';
 
-export async function run(client: Bot, interaction: ChatInputCommandInteraction) {
+export async function run(_client: Bot, interaction: ChatInputCommandInteraction) {
     if (!interaction.memberPermissions?.has(PermissionFlagsBits.ManageRoles)) {
         await interaction.reply({
             content: 'Nie masz uprawnień do używania tej komendy (wymagane: Zarządzanie rolami).',

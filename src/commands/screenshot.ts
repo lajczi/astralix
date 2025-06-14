@@ -8,7 +8,7 @@ import process from 'node:process';
 import { AttachmentBuilder, type ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import type { Bot } from '../classes/Bot.js';
 
-export async function run(client: Bot, interaction: ChatInputCommandInteraction) {
+export async function run(_client: Bot, interaction: ChatInputCommandInteraction) {
     await interaction.deferReply();
 
     let url = interaction.options.getString('url', true);

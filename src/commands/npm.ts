@@ -18,7 +18,7 @@ interface NpmPackage {
     description?: string;
 }
 
-export async function run(client: Bot, interaction: ChatInputCommandInteraction) {
+export async function run(_client: Bot, interaction: ChatInputCommandInteraction) {
     await interaction.deferReply();
 
     const packageName = interaction.options.getString('package', true);

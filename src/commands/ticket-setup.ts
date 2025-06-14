@@ -16,7 +16,7 @@ import {
 import type { Bot } from '../classes/Bot.js';
 import { config } from '../config.js';
 
-export async function run(client: Bot, interaction: ChatInputCommandInteraction) {
+export async function run(_client: Bot, interaction: ChatInputCommandInteraction) {
     const { guild } = interaction;
 
     if (!guild) return;
@@ -57,20 +57,12 @@ export async function run(client: Bot, interaction: ChatInputCommandInteraction)
 
     const buttons = new ActionRowBuilder<ButtonBuilder>().addComponents(
         new ButtonBuilder()
-            .setCustomId('create_ticket_cooperation')
+            .setCustomId('cooperation')
             .setLabel('Współpraca')
             .setStyle(ButtonStyle.Success)
             .setEmoji('🤝'),
-        new ButtonBuilder()
-            .setCustomId('create_ticket_report')
-            .setLabel('Zgłoszenie')
-            .setStyle(ButtonStyle.Danger)
-            .setEmoji('🚨'),
-        new ButtonBuilder()
-            .setCustomId('create_ticket_question')
-            .setLabel('Pytanie')
-            .setStyle(ButtonStyle.Primary)
-            .setEmoji('❓'),
+        new ButtonBuilder().setCustomId('report').setLabel('Zgłoszenie').setStyle(ButtonStyle.Danger).setEmoji('🚨'),
+        new ButtonBuilder().setCustomId('question').setLabel('Pytanie').setStyle(ButtonStyle.Primary).setEmoji('❓'),
     );
 
     await ticketChannel.send({ embeds: [embed], components: [buttons] });

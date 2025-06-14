@@ -10,7 +10,7 @@ interface MemeResponse {
     url: string;
 }
 
-export async function run(client: Bot, interaction: ChatInputCommandInteraction) {
+export async function run(_client: Bot, interaction: ChatInputCommandInteraction) {
     await interaction.deferReply();
 
     const response = await fetch('https://ivall.pl/memy');

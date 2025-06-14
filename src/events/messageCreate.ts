@@ -4,9 +4,10 @@
  */
 
 import { EmbedBuilder, type Message, PermissionsBitField } from 'discord.js';
+import type { Bot } from '../classes/Bot.js';
 import { config } from '../config.js';
 
-export async function messageCreate(message: Message) {
+export async function messageCreate(_client: Bot, message: Message) {
     if (!shouldProcessMessage(message)) return;
 
     if (shouldModerate(message)) {
