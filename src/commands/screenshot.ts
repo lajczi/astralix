@@ -5,32 +5,15 @@
 
 import { Buffer } from 'node:buffer';
 import process from 'node:process';
-import {
-  ApplicationCommandOptionType,
-  AttachmentBuilder,
-  type ChatInputCommandInteraction,
-  EmbedBuilder,
-} from 'discord.js';
-import type { Command } from '../types/Command.js';
+import { AttachmentBuilder, type ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import type { Bot } from '../classes/Bot.js';
 
-const command: Command = {
-  name: 'screenshot',
-  description: 'Zrób zrzut ekranu strony internetowej',
-  options: [
-    {
-      name: 'url',
-      description: 'Adres strony do zrzutu ekranu',
-      type: ApplicationCommandOptionType.String,
-      required: true,
-    },
-  ],
-  enabled: true,
-  deferReply: true,
-  cooldown: 30,
-  execute: async (interaction: ChatInputCommandInteraction) => {
+export async function run(_client: Bot, interaction: ChatInputCommandInteraction) {
+    await interaction.deferReply();
+
     let url = interaction.options.getString('url', true);
     if (!url.startsWith('http')) {
-      url = `https://${url}`;
+        url = `https://${url}`;
     }
 
     const apiKey = process.env.APIFLASH_KEY ?? '';
@@ -48,39 +31,43 @@ const command: Command = {
     const response = await fetch(apiUrl);
 
     if (!response.ok) {
-      throw new Error(`API request failed: ${response.status}`);
+        throw new Error(`API request failed: ${response.status}`);
     }
 
     const attachment = new AttachmentBuilder(Buffer.from(await response.arrayBuffer()), {
-      name: 'screenshot.png',
+        name: 'screenshot.png',
     });
 
     const embed = new EmbedBuilder()
-      .setTitle('📸 Zrzut ekranu strony WWW')
-      .setURL(url)
-      .addFields([
-        {
-          name: 'Strona',
-          value: `[${new URL(url).hostname}](${url})`,
-          inline: true,
-        },
-        { name: 'Status', value: 'Pomyślnie wykonano', inline: true },
-        {
-          name: 'Czas',
-          value: `<t:${Math.floor(Date.now() / 1000)}:R>`,
-          inline: true,
-        },
-      ])
-      .setImage('attachment://screenshot.png')
-      .setColor(0x00ff88)
-      .setTimestamp()
-      .setFooter({
-        text: `Wykonano dla ${interaction.user.tag}`,
-        iconURL: interaction.user.displayAvatarURL(),
-      });
+        .setTitle('📸 Zrzut ekranu strony WWW')
+        .setURL(url)
+        .addFields([
+            {
+                name: 'Strona',
+                value: `[${new URL(url).hostname}](${url})`,
+                inline: true,
+            },
+            { name: 'Status', value: 'Pomyślnie wykonano', inline: true },
+            {
+                name: 'Czas',
+                value: `<t:${Math.floor(Date.now() / 1000)}:R>`,
+                inline: true,
+            },
+        ])
+        .setImage('attachment://screenshot.png')
+        .setColor(0x00ff88)
+        .setTimestamp()
+        .setFooter({
+            text: `Wykonano dla ${interaction.user.tag}`,
+            iconURL: interaction.user.displayAvatarURL(),
+        });
 
     await interaction.editReply({ embeds: [embed], files: [attachment] });
-  },
-};
+}
 
-export default command;
+export const data = new SlashCommandBuilder()
+    .setName('screenshot')
+    .setDescription('Zrób zrzut ekranu strony internetowej')
+    .addStringOption((option) =>
+        option.setName('url').setDescription('Adres strony do zrzutu ekranu').setRequired(true),
+    );
