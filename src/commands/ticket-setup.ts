@@ -13,7 +13,7 @@ import {
   PermissionFlagsBits,
 } from 'discord.js';
 import type { Command } from '../types/Command.js';
-import { config } from '../utils/config.js';
+import { config } from '../config.js';
 
 const command: Command = {
   name: 'ticket-setup',

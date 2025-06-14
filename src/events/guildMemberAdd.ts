@@ -5,7 +5,7 @@
 
 import type { GuildMember } from 'discord.js';
 import type { Event } from '../types/Event.js';
-import { config } from '../utils/config.js';
+import { config } from '../config.js';
 
 const event: Event = {
   name: 'guildMemberAdd',

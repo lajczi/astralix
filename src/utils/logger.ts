@@ -3,19 +3,20 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import chalk from 'chalk';
-
 type LogLevel = 'info' | 'warn' | 'error' | 'success' | 'debug';
 
 const colorMap: Record<LogLevel, (text: string) => string> = {
-  info: chalk.blue,
-  warn: chalk.yellow,
-  error: chalk.red,
-  success: chalk.green,
-  debug: chalk.magenta,
+  info: (text: string) => `\x1b[34m${text}\x1b[0m`,
+  warn: (text: string) => `\x1b[33m${text}\x1b[0m`,
+  error: (text: string) => `\x1b[31m${text}\x1b[0m`,
+  success: (text: string) => `\x1b[32m${text}\x1b[0m`,
+  debug: (text: string) => `\x1b[35m${text}\x1b[0m`,
 };
+
+const gray = (text: string) => `\x1b[90m${text}\x1b[0m`;
+
 const log = (level: LogLevel, message: string): void => {
-  const time = chalk.gray(`[${new Date().toLocaleTimeString('pl-PL')}]`);
+  const time = gray(`[${new Date().toLocaleTimeString('pl-PL')}]`);
   const coloredLevel = colorMap[level](level.toUpperCase());
 
   console.log(`${time} ${coloredLevel} ${message}`);

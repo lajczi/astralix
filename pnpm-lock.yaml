@@ -8,15 +8,9 @@ importers:
 
   .:
     dependencies:
-      chalk:
-        specifier: ~5.4.1
-        version: 5.4.1
       discord.js:
         specifier: ~14.19.3
         version: 14.19.3
-      smol-toml:
-        specifier: ~1.3.4
-        version: 1.3.4
     devDependencies:
       '@biomejs/biome':
         specifier: ~1.9.4
@@ -289,10 +283,6 @@ packages:
     resolution: {integrity: sha512-RaI5qZo6D2CVS6sTHFKg1v5Ohq/+Bo2LZ5gzUEwZ/WkHhwtGTCB/sVLw8ijOkAUxasZ+WshN/Rzj4ywsABJ5ZA==}
     engines: {node: '>=v14.0.0', npm: '>=7.0.0'}
 
-  chalk@5.4.1:
-    resolution: {integrity: sha512-zgVZuo2WcZgfUEmsn6eO3kINexW8RAE4maiQ8QNs8CtpPCSyMiYsULR3HQYkm3w8FIA3SberyMJMSldGsW+U3w==}
-    engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
-
   discord-api-types@0.38.11:
     resolution: {integrity: sha512-XN0qhcQpetkyb/49hcDHuoeUPsQqOkb17wbV/t48gUkoEDi4ajhsxqugGcxvcN17BBtI9FPPWEgzv6IhQmCwyw==}
 
@@ -320,10 +310,6 @@ packages:
 
   magic-bytes.js@1.12.1:
     resolution: {integrity: sha512-ThQLOhN86ZkJ7qemtVRGYM+gRgR8GEXNli9H/PMvpnZsE44Xfh3wx9kGJaldg314v85m+bFW6WBMaVHJc/c3zA==}
-
-  smol-toml@1.3.4:
-    resolution: {integrity: sha512-UOPtVuYkzYGee0Bd2Szz8d2G3RfMfJ2t3qVdZUAozZyAk+a0Sxa+QKix0YCwjL/A1RR0ar44nCxaoN9FxdJGwA==}
-    engines: {node: '>= 18'}
 
   ts-mixer@6.0.4:
     resolution: {integrity: sha512-ufKpbmrugz5Aou4wcr5Wc1UUFWOLhq+Fm6qa6P0w0K5Qw2yhaUoiWszhCVuNQyNwrlGiscHOmqYoAox1PtvgjA==}
@@ -533,8 +519,6 @@ snapshots:
 
   '@vladfrangu/async_event_emitter@2.4.6': {}
 
-  chalk@5.4.1: {}
-
   discord-api-types@0.38.11: {}
 
   discord.js@14.19.3:
@@ -593,8 +577,6 @@ snapshots:
   lodash@4.17.21: {}
 
   magic-bytes.js@1.12.1: {}
-
-  smol-toml@1.3.4: {}
 
   ts-mixer@6.0.4: {}
 
