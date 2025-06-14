@@ -3,18 +3,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import process from 'node:process';
-import { config } from 'dotenv';
+import 'dotenv/config';
+import { Bot } from './classes/Bot.js';
 
-import { Client } from './structures/Client.js';
-import { logger } from './utils/logger.js';
-
-config();
-
-if (!process.env.TOKEN || !process.env.APIFLASH_KEY) {
-  logger.error('Missing environment variables');
-  process.exit(1);
-}
-
-const client = new Client();
-client.start(process.env.TOKEN);
+new Bot();

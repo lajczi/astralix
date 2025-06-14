@@ -3,35 +3,30 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { type ChatInputCommandInteraction, EmbedBuilder } from 'discord.js';
-import type { Command } from '../types/Command.js';
+import { type ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import type { Bot } from '../classes/Bot.js';
 
 interface MemeResponse {
-  url: string;
+    url: string;
 }
 
-const command: Command = {
-  name: 'mem',
-  description: 'Losowy mem z memy.pl',
-  enabled: true,
-  deferReply: true,
-  cooldown: 5,
-  execute: async (interaction: ChatInputCommandInteraction) => {
+export async function run(client: Bot, interaction: ChatInputCommandInteraction) {
+    await interaction.deferReply();
+
     const response = await fetch('https://ivall.pl/memy');
-    const data: MemeResponse = await response.json();
+    const data = (await response.json()) as MemeResponse;
 
     const embed = new EmbedBuilder()
-      .setTitle('😂 Losowy mem')
-      .setImage(data.url)
-      .setColor(0x00ff88)
-      .setTimestamp()
-      .setFooter({
-        text: `Dla ${interaction.user.tag}`,
-        iconURL: interaction.user.displayAvatarURL(),
-      });
+        .setTitle('😂 Losowy mem')
+        .setImage(data.url)
+        .setColor(0x00ff88)
+        .setTimestamp()
+        .setFooter({
+            text: `Dla ${interaction.user.tag}`,
+            iconURL: interaction.user.displayAvatarURL(),
+        });
 
     await interaction.editReply({ embeds: [embed] });
-  },
-};
+}
 
-export default command;
+export const data = new SlashCommandBuilder().setName('mem').setDescription('Losowy mem z memy.pl');

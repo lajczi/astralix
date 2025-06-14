@@ -5,20 +5,12 @@
 
 import type { GuildMember } from 'discord.js';
 import { config } from '../config.js';
-import type { Event } from '../types/Event.js';
 
-const event: Event = {
-  name: 'guildMemberAdd',
-  execute: async (_client, ...args) => {
-    const member = args[0] as GuildMember;
+export async function guildMemberAdd(member: GuildMember) {
     if (member.guild.id !== config.guildId) return;
 
-    // handle autorole
     const role = member.guild.roles.cache.get(config.autorole.roleId);
     if (role) {
-      await member.roles.add(role).catch(() => {});
+        await member.roles.add(role).catch(() => {});
     }
-  },
-};
-
-export default event;
+}
