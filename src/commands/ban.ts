@@ -13,14 +13,6 @@ import {
 import type { Bot } from '../classes/Bot.js';
 
 export async function run(_client: Bot, interaction: ChatInputCommandInteraction) {
-    if (!interaction.memberPermissions?.has(PermissionFlagsBits.BanMembers)) {
-        await interaction.reply({
-            content: 'Nie masz uprawnień do używania tej komendy (wymagane: Banowanie członków).',
-            flags: MessageFlags.Ephemeral,
-        });
-        return;
-    }
-
     const targetUser = interaction.options.getUser('user', true);
     const reason = interaction.options.getString('reason') ?? 'Nie podano powodu';
     const { guild, user: admin } = interaction;
@@ -86,5 +78,6 @@ export async function run(_client: Bot, interaction: ChatInputCommandInteraction
 export const data = new SlashCommandBuilder()
     .setName('ban')
     .setDescription('Banuje użytkownika z serwera')
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     .addUserOption((option) => option.setName('user').setDescription('Użytkownik do zbanowania').setRequired(true))
     .addStringOption((option) => option.setName('reason').setDescription('Powód bana').setRequired(false));

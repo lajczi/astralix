@@ -13,16 +13,8 @@ import {
 import type { Bot } from '../classes/Bot.js';
 
 export async function run(_client: Bot, interaction: ChatInputCommandInteraction) {
-    if (!interaction.memberPermissions?.has(PermissionFlagsBits.ManageMessages)) {
-        await interaction.reply({
-            content: 'Nie masz uprawnień do używania tej komendy (wymagane: Zarządzanie wiadomościami).',
-            flags: MessageFlags.Ephemeral,
-        });
-        return;
-    }
-
     const amount = interaction.options.getInteger('amount', true);
-    const { channel, user: admin } = interaction;
+    const { channel, user } = interaction;
 
     if (!channel?.isTextBased() || !('bulkDelete' in channel)) {
         await interaction.reply({
@@ -35,34 +27,16 @@ export async function run(_client: Bot, interaction: ChatInputCommandInteraction
     await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     const messages = await channel.messages.fetch({ limit: amount });
-    const twoWeeksAgo = Date.now() - 14 * 24 * 60 * 60 * 1000;
-
-    const recentMessages = messages.filter((msg) => msg.createdTimestamp > twoWeeksAgo);
-    const oldMessages = messages.filter((msg) => msg.createdTimestamp <= twoWeeksAgo);
-
-    let deletedCount = 0;
-
-    if (recentMessages.size > 0) {
-        const bulkDeleted = await channel.bulkDelete(recentMessages, true);
-        deletedCount += bulkDeleted.size;
-    }
-
-    if (oldMessages.size > 0) {
-        for (const message of oldMessages.values()) {
-            await message.delete();
-            deletedCount++;
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-        }
-    }
+    const deleted = await channel.bulkDelete(messages, true);
 
     const embed = new EmbedBuilder()
         .setTitle('🗑️ Wyczyszczono kanał')
-        .setDescription(`Usunięto **${deletedCount}** wiadomości.`)
+        .setDescription(`Usunięto **${deleted.size}** wiadomości.`)
         .setColor(0x10b981)
         .setTimestamp()
         .setFooter({
-            text: `Wykonano przez ${admin.tag}`,
-            iconURL: admin.displayAvatarURL(),
+            text: `Wykonano przez ${user.tag}`,
+            iconURL: user.displayAvatarURL(),
         });
 
     await interaction.editReply({ embeds: [embed] });
@@ -70,11 +44,12 @@ export async function run(_client: Bot, interaction: ChatInputCommandInteraction
 
 export const data = new SlashCommandBuilder()
     .setName('clear')
-    .setDescription('Usuwa określoną liczbę wiadomości z kanału.')
+    .setDescription('Usuwa określoną liczbę wiadomości z kanału')
+    .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
     .addIntegerOption((option) =>
         option
             .setName('amount')
-            .setDescription('Liczba wiadomości do usunięcia (1-100).')
+            .setDescription('Liczba wiadomości do usunięcia (1-100)')
             .setRequired(true)
             .setMinValue(1)
             .setMaxValue(100),
