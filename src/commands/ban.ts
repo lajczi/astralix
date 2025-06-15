@@ -78,6 +78,6 @@ export async function run(_client: Bot, interaction: ChatInputCommandInteraction
 export const data = new SlashCommandBuilder()
     .setName('ban')
     .setDescription('Banuje użytkownika z serwera')
-    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+    .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
     .addUserOption((option) => option.setName('user').setDescription('Użytkownik do zbanowania').setRequired(true))
     .addStringOption((option) => option.setName('reason').setDescription('Powód bana').setRequired(false));
