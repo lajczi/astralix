@@ -78,7 +78,7 @@ async function handleSuggestion(message: Message): Promise<void> {
         })
         .setFooter({
             text: message.guild?.name,
-            iconURL: message.guild?.iconURL() || undefined,
+            iconURL: message.guild?.iconURL() ?? undefined,
         });
 
     const suggestionMessage = await message.channel.send({ embeds: [embed] });

@@ -27,7 +27,7 @@ export async function run(_client: Bot, interaction: ChatInputCommandInteraction
 
     if (!guild) return;
 
-    const member = await guild.members.fetch(targetUser.id).catch(() => undefined);
+    const member = await guild.members.fetch(targetUser.id).catch(() => {});
 
     if (!member) {
         await interaction.reply({

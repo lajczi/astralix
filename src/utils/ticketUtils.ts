@@ -38,20 +38,20 @@ export async function createTicket(
     interaction: ModalSubmitInteraction,
     typeName: string,
     description: string,
-): Promise<TextChannel | null> {
+): Promise<TextChannel | undefined> {
     const { guild, user } = interaction;
 
-    if (!guild) return null;
+    if (!guild) return;
 
     const category = guild.channels.cache.get(config.tickets.categoryId) as CategoryChannel | undefined;
     const adminRole = guild.roles.cache.get(config.tickets.adminRoleId);
 
     if (!category || !adminRole) {
         logger.error('Category or admin role not found');
-        return null;
+        return;
     }
 
-    if (await hasActiveTicket(guild, user)) return null;
+    if (await hasActiveTicket(guild, user)) return;
 
     try {
         const ticketChannel = await createTicketChannel(guild, user, category, adminRole);
@@ -59,7 +59,7 @@ export async function createTicket(
         return ticketChannel;
     } catch (err) {
         logger.error(`Error creating ticket: ${err}`);
-        return null;
+        return;
     }
 }
 
@@ -148,21 +148,21 @@ async function sendTicketEmbed(
     });
 }
 
-export function extractUserIdFromChannel(channel: GuildChannel): string | null {
-    let userIdMatch: RegExpMatchArray | null = null;
+export function extractUserIdFromChannel(channel: GuildChannel): string | undefined {
+    let userIdMatch: RegExpMatchArray | null | undefined;
     if ('topic' in channel && typeof channel.topic === 'string' && channel.topic) {
         userIdMatch = channel.topic.match(/User ID: (\d+)/);
     }
-    return userIdMatch ? userIdMatch[1] : null;
+    return userIdMatch ? userIdMatch[1] : undefined;
 }
 
-export function extractTicketIdFromChannel(channel: GuildChannel): string | null {
-    let ticketIdMatch: RegExpMatchArray | null = null;
+export function extractTicketIdFromChannel(channel: GuildChannel): string | undefined {
+    let ticketIdMatch: RegExpMatchArray | null | undefined;
     if ('topic' in channel && typeof channel.topic === 'string' && channel.topic) {
         ticketIdMatch = channel.topic.match(/Ticket ID: (\d+)/);
     }
     if (!ticketIdMatch) {
         ticketIdMatch = channel.name.match(/🎫・(\d+)/);
     }
-    return ticketIdMatch ? ticketIdMatch[1] : null;
+    return ticketIdMatch ? ticketIdMatch[1] : undefined;
 }

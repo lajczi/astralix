@@ -69,7 +69,7 @@ export class Bot extends Client {
 
     async loadFolder<T>(folder: string | URL): Promise<{ files: Map<string, T>; directoriesFound: string[] }> {
         const files = new Map();
-        const directory = await readdir(folder).catch(() => undefined);
+        const directory = await readdir(folder).catch(() => {});
         const directoriesFound: string[] = [];
         if (!directory) return { files, directoriesFound };
         for (const file of directory) {

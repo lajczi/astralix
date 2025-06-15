@@ -31,7 +31,7 @@ export async function run(_client: Bot, interaction: ModalSubmitInteraction) {
         return;
     }
 
-    const targetUser = await guild.members.fetch(userId).catch(() => null);
+    const targetUser = await guild.members.fetch(userId).catch(() => {});
     if (targetUser) {
         const dmEmbed = new EmbedBuilder()
             .setTitle('🔒 Zgłoszenie zamknięte')
