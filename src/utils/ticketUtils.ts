@@ -109,7 +109,7 @@ async function sendTicketEmbed(
     description: string,
     adminRole: Role,
 ) {
-    const ticketId = extractTicketIdFromChannel(channel) || 'Unknown';
+    const ticketId = extractTicketIdFromChannel(channel) ?? 'Unknown';
 
     const ticketEmbed = new EmbedBuilder()
         .setTitle('🎫 Nowe zgłoszenie')
@@ -149,20 +149,19 @@ async function sendTicketEmbed(
 }
 
 export function extractUserIdFromChannel(channel: GuildChannel): string | undefined {
-    let userIdMatch: RegExpMatchArray | null | undefined;
     if ('topic' in channel && typeof channel.topic === 'string' && channel.topic) {
-        userIdMatch = channel.topic.match(/User ID: (\d+)/);
+        const userIdMatch = channel.topic.match(/User ID: (\d+)/);
+        return userIdMatch?.[1];
     }
-    return userIdMatch ? userIdMatch[1] : undefined;
+    return undefined;
 }
 
 export function extractTicketIdFromChannel(channel: GuildChannel): string | undefined {
-    let ticketIdMatch: RegExpMatchArray | null | undefined;
     if ('topic' in channel && typeof channel.topic === 'string' && channel.topic) {
-        ticketIdMatch = channel.topic.match(/Ticket ID: (\d+)/);
+        const ticketIdMatch = channel.topic.match(/Ticket ID: (\d+)/);
+        if (ticketIdMatch) return ticketIdMatch[1];
     }
-    if (!ticketIdMatch) {
-        ticketIdMatch = channel.name.match(/🎫・(\d+)/);
-    }
-    return ticketIdMatch ? ticketIdMatch[1] : undefined;
+
+    const nameMatch = channel.name.match(/🎫・(\d+)/);
+    return nameMatch?.[1];
 }

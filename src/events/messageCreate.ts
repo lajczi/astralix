@@ -8,64 +8,45 @@ import type { Bot } from '../classes/Bot.js';
 import { config } from '../config.js';
 
 export async function messageCreate(_client: Bot, message: Message) {
-    if (!shouldProcessMessage(message)) return;
+    if (!message.guild || message.author.bot) return;
 
-    if (shouldModerate(message)) {
-        await message.delete().catch(() => {});
-        return;
+    if (message.guild.id === config.guildId) {
+        if (shouldModerate(message)) {
+            await message.delete();
+            return;
+        }
+
+        if (message.channel.id === config.suggestions.channelId) {
+            await handleSuggestion(message);
+        }
     }
-
-    await handleSuggestion(message);
 }
 
-const DISALLOWED_PATTERNS = [
-    {
-        pattern: /(?:https?:\/\/)?(?:www\.)?(?:discord\.(?:gg|io|me|li)|discord(?:app)?\.com\/invite)\/[a-zA-Z0-9]+/i,
-    },
-    {
-        pattern: /(?:https?:\/\/)?(?:www\.)?(bit\.ly|tinyurl\.com|t\.co|goo\.gl|short\.link|rebrand\.ly)/i,
-    },
-    {
-        pattern: /https?:\/\/[^\s]+\.(?:tk|ml|ga)\b/i,
-    },
+const SPAM_PATTERNS = [
+    /(?:https?:\/\/)?(?:www\.)?(?:discord\.(?:gg|io|me|li)|discord(?:app)?\.com\/invite)\/[a-zA-Z0-9]+/i,
+    /(?:https?:\/\/)?(?:www\.)?(bit\.ly|tinyurl\.com|t\.co|goo\.gl|short\.link|rebrand\.ly)/i,
+    /https?:\/\/[^\s]+\.(?:tk|ml|ga)\b/i,
 ];
 
 const ALLOWED_DOMAINS = ['cdn.discordapp.com', 'media.discordapp.net', 'discord.com', 'discordapp.com'];
 
-function shouldProcessMessage(message: Message): boolean {
-    return Boolean(message.guild && !message.author.bot);
-}
-
 function shouldModerate(message: Message): boolean {
-    if (
-        message.guild?.id !== config.guildId ||
-        message.member?.permissions.has(PermissionsBitField.Flags.ManageMessages) ||
-        message.author.bot
-    ) {
+    if (message.member?.permissions.has(PermissionsBitField.Flags.ManageMessages)) {
         return false;
     }
 
     const content = message.content.toLowerCase();
 
-    if (DISALLOWED_PATTERNS.some(({ pattern }) => pattern.test(content))) {
+    if (SPAM_PATTERNS.some((pattern) => pattern.test(content))) {
         return true;
     }
 
-    const urls = content.match(/https?:\/\/[^\s]+/gi) ?? [];
-    return urls.some((url) => !ALLOWED_DOMAINS.some((domain) => url.includes(domain)));
+    const urls = content.match(/https?:\/\/[^\s]+/gi);
+    return urls?.some((url) => !ALLOWED_DOMAINS.some((domain) => url.includes(domain))) ?? false;
 }
 
 async function handleSuggestion(message: Message): Promise<void> {
-    if (
-        message.guild?.id !== config.guildId ||
-        message.channel.id !== config.suggestions.channelId ||
-        message.author.bot ||
-        !message.channel.isTextBased()
-    ) {
-        return;
-    }
-
-    if (!('send' in message.channel)) return;
+    if (!message.channel.isTextBased() || !('send' in message.channel)) return;
 
     const embed = new EmbedBuilder()
         .setTitle('💡 Nowa propozycja')
@@ -77,17 +58,21 @@ async function handleSuggestion(message: Message): Promise<void> {
             iconURL: message.author.displayAvatarURL(),
         })
         .setFooter({
-            text: message.guild?.name,
-            iconURL: message.guild?.iconURL() ?? undefined,
+            text: message.guild?.name ?? '',
+            iconURL: message.guild?.iconURL() ?? '',
         });
 
     const suggestionMessage = await message.channel.send({ embeds: [embed] });
-    await Promise.all([suggestionMessage.react('👍'), suggestionMessage.react('👎'), message.delete()]);
 
-    const thread = await suggestionMessage.startThread({
-        name: 'Dyskusja o propozycji',
-        autoArchiveDuration: 1440,
-    });
-
-    await thread.send('W tym wątku możesz przedyskutować tę propozycję.');
+    await Promise.all([
+        suggestionMessage.react('👍'),
+        suggestionMessage.react('👎'),
+        message.delete(),
+        suggestionMessage
+            .startThread({
+                name: 'Dyskusja o propozycji',
+                autoArchiveDuration: 1440,
+            })
+            .then((thread) => thread.send('W tym wątku możesz przedyskutować tę propozycję.')),
+    ]);
 }

@@ -49,7 +49,7 @@ export async function run(_client: Bot, interaction: ChatInputCommandInteraction
 
     if (oldMessages.size > 0) {
         for (const message of oldMessages.values()) {
-            await message.delete().catch(() => {});
+            await message.delete();
             deletedCount++;
             await new Promise((resolve) => setTimeout(resolve, 1000));
         }
